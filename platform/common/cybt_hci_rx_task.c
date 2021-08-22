@@ -125,6 +125,11 @@ void handle_hci_rx_event(void)
     p_hci_evt_header = (hci_event_packet_header_t *)p;
     p+= sizeof(hci_event_packet_header_t);
 
+    if (p_hci_evt_header->content_length == 0) {
+      HCIRXTASK_TRACE_ERROR("handle_hci_rx_event(): content_length is 0!");
+      return;
+    }
+
     read_len = p_hci_evt_header->content_length;
     result = cybt_platform_hci_read(HCI_PACKET_TYPE_EVENT,
                                     p,
@@ -375,6 +380,8 @@ void cybt_hci_rx_task(cy_thread_arg_t arg)
 {
     bt_task_ind_t  bt_ind_msg;
     cy_rslt_t      result;
+
+    HCIRXTASK_TRACE_DEBUG("hci_rx_task(): start");
 
     cybt_core_stack_init();
 

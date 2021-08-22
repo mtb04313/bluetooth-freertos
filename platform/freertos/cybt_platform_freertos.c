@@ -738,6 +738,11 @@ cybt_result_t cybt_platform_hci_read(hci_packet_type_t type,
     cy_rslt_t result;
     cybt_result_t return_status;
 
+    if (req_len == 0) {
+        HCIDRV_TRACE_ERROR("hci_read(): req_len is 0!");
+        return CYBT_ERR_HCI_READ_FAILED;
+    }
+
     if(false == hci_uart_cb.inited)
     {
         HCIDRV_TRACE_ERROR("hci_read(): UART is NOT initialized");
